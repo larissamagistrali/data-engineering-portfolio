@@ -1,0 +1,7 @@
+# Dependências do APP (leves, para o Streamlit Community Cloud).
+# Os pipelines pesados (dbt, Spark, Airflow, Kafka) rodam localmente e têm requirements próprios em projects/*/requirements.txt.
+streamlit>=1.50
+pandas>=2.2
+plotly>=5.24
+duckdb>=1.1
+pyarrow>=15

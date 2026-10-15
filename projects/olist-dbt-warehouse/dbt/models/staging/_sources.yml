@@ -1,0 +1,58 @@
+version: 2
+
+sources:
+  - name: olist
+    description: >
+      Tabelas brutas do Olist carregadas como texto no schema `raw` do DuckDB por
+      `python -m olist_warehouse.load_raw`. Neste repositório os dados são SINTÉTICOS, com o
+      schema real do Olist (Brazilian E-Commerce Public Dataset, CC BY-NC-SA 4.0).
+    schema: raw
+    tables:
+      - name: customers
+        description: Um registro por pedido (customer_id); o cliente real é customer_unique_id.
+        columns:
+          - name: customer_id
+            description: Chave do cliente por pedido.
+            data_tests: [unique, not_null]
+          - name: customer_unique_id
+            description: Identificador estável do cliente (reaparece em compras repetidas).
+            data_tests: [not_null]
+      - name: orders
+        description: Pedidos com os marcos de data (compra, aprovação, transportadora, entrega, estimativa).
+        columns:
+          - name: order_id
+            data_tests: [unique, not_null]
+          - name: customer_id
+            data_tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('olist', 'customers')
+                    field: customer_id
+      - name: order_items
+        description: Itens do pedido (grão pedido + order_item_id).
+        columns:
+          - name: order_id
+            data_tests: [not_null]
+      - name: order_payments
+        description: Pagamentos por pedido (um pedido pode ter mais de uma forma de pagamento).
+      - name: order_reviews
+        description: Avaliações dos clientes (nota 1 a 5). Um pedido pode ter mais de uma avaliação.
+        columns:
+          - name: review_id
+            data_tests: [unique, not_null]
+      - name: products
+        description: Catálogo de produtos.
+        columns:
+          - name: product_id
+            data_tests: [unique, not_null]
+      - name: sellers
+        description: Vendedores do marketplace.
+        columns:
+          - name: seller_id
+            data_tests: [unique, not_null]
+      - name: product_category_name_translation
+        description: Tradução do nome da categoria (PT para EN).
+        columns:
+          - name: product_category_name
+            data_tests: [unique, not_null]

@@ -1,0 +1,550 @@
+{
+  "dataset": "contratos_pncp",
+  "tipo_dados": "real",
+  "fonte": {
+    "nome": "PNCP - Portal Nacional de Contratações Públicas (API pública de consulta)",
+    "endpoint": "https://pncp.gov.br/api/consulta/v1/contratos",
+    "parametros": {
+      "consulta": "contratos por data de publicação",
+      "dataInicial": "20250101",
+      "dataFinal": "20250331",
+      "tamanhoPagina": 500
+    },
+    "periodo_publicacao": [
+      "20250101",
+      "20250331"
+    ],
+    "total_registros_na_janela": 412779,
+    "total_paginas_na_janela": 826,
+    "amostragem": "12 páginas sorteadas (semente 42) de todas as páginas da janela; amostra por cluster de páginas, não linhas isoladas",
+    "paginas_amostradas": [
+      26,
+      105,
+      115,
+      143,
+      229,
+      251,
+      282,
+      655,
+      693,
+      755,
+      759,
+      760
+    ],
+    "coletado_em": "2026-10-14",
+    "licenca": "dados públicos de acesso livre do PNCP; citar a fonte"
+  },
+  "data_referencia": "2026-10-14",
+  "registros": 6000,
+  "regras_total": 25,
+  "regras_avaliadas": 25,
+  "regras_passaram": 20,
+  "score_geral_pct": 99.49,
+  "registros_sem_erro_pct": 99.95,
+  "registros_com_erro": 3,
+  "registros_com_aviso_ou_erro": 728,
+  "dimensoes": {
+    "completude": {
+      "regras": 5,
+      "regras_avaliadas": 5,
+      "regras_passaram": 5,
+      "score_pct": 100.0
+    },
+    "unicidade": {
+      "regras": 2,
+      "regras_avaliadas": 2,
+      "regras_passaram": 2,
+      "score_pct": 100.0
+    },
+    "validade": {
+      "regras": 12,
+      "regras_avaliadas": 12,
+      "regras_passaram": 8,
+      "score_pct": 98.94
+    },
+    "consistencia": {
+      "regras": 5,
+      "regras_avaliadas": 5,
+      "regras_passaram": 4,
+      "score_pct": 99.98
+    },
+    "atualidade": {
+      "regras": 1,
+      "regras_avaliadas": 1,
+      "regras_passaram": 1,
+      "score_pct": 100.0
+    }
+  },
+  "regras": [
+    {
+      "id": "C001",
+      "descricao": "`ni_fornecedor` preenchido",
+      "dimensao": "completude",
+      "severidade": "erro",
+      "colunas": [
+        "ni_fornecedor"
+      ],
+      "status": "passou",
+      "avaliadas": 6000,
+      "falhas": 0,
+      "pct_falha": 0.0,
+      "aprovacao": 1.0,
+      "exemplos": [],
+      "motivo": null
+    },
+    {
+      "id": "C002",
+      "descricao": "`objeto_contrato` preenchido",
+      "dimensao": "completude",
+      "severidade": "aviso",
+      "colunas": [
+        "objeto_contrato"
+      ],
+      "status": "passou",
+      "avaliadas": 6000,
+      "falhas": 0,
+      "pct_falha": 0.0,
+      "aprovacao": 1.0,
+      "exemplos": [],
+      "motivo": null
+    },
+    {
+      "id": "C003",
+      "descricao": "`valor_global` preenchido",
+      "dimensao": "completude",
+      "severidade": "erro",
+      "colunas": [
+        "valor_global"
+      ],
+      "status": "passou",
+      "avaliadas": 6000,
+      "falhas": 0,
+      "pct_falha": 0.0,
+      "aprovacao": 1.0,
+      "exemplos": [],
+      "motivo": null
+    },
+    {
+      "id": "C004",
+      "descricao": "`cnpj_orgao` preenchido",
+      "dimensao": "completude",
+      "severidade": "erro",
+      "colunas": [
+        "cnpj_orgao"
+      ],
+      "status": "passou",
+      "avaliadas": 6000,
+      "falhas": 0,
+      "pct_falha": 0.0,
+      "aprovacao": 1.0,
+      "exemplos": [],
+      "motivo": null
+    },
+    {
+      "id": "C005",
+      "descricao": "`data_publicacao` preenchido",
+      "dimensao": "completude",
+      "severidade": "erro",
+      "colunas": [
+        "data_publicacao"
+      ],
+      "status": "passou",
+      "avaliadas": 6000,
+      "falhas": 0,
+      "pct_falha": 0.0,
+      "aprovacao": 1.0,
+      "exemplos": [],
+      "motivo": null
+    },
+    {
+      "id": "U001",
+      "descricao": "`numero_controle_pncp` sem repetição",
+      "dimensao": "unicidade",
+      "severidade": "erro",
+      "colunas": [
+        "numero_controle_pncp"
+      ],
+      "status": "passou",
+      "avaliadas": 6000,
+      "falhas": 0,
+      "pct_falha": 0.0,
+      "aprovacao": 1.0,
+      "exemplos": [],
+      "motivo": null
+    },
+    {
+      "id": "U002",
+      "descricao": "linha não duplicada (numero_controle_pncp, numero_retificacao, data_atualizacao, valor_global)",
+      "dimensao": "unicidade",
+      "severidade": "erro",
+      "colunas": [
+        "numero_controle_pncp",
+        "numero_retificacao",
+        "data_atualizacao",
+        "valor_global"
+      ],
+      "status": "passou",
+      "avaliadas": 6000,
+      "falhas": 0,
+      "pct_falha": 0.0,
+      "aprovacao": 1.0,
+      "exemplos": [],
+      "motivo": null
+    },
+    {
+      "id": "V001",
+      "descricao": "`numero_controle_pncp` no formato esperado",
+      "dimensao": "validade",
+      "severidade": "erro",
+      "colunas": [
+        "numero_controle_pncp"
+      ],
+      "status": "passou",
+      "avaliadas": 6000,
+      "falhas": 0,
+      "pct_falha": 0.0,
+      "aprovacao": 1.0,
+      "exemplos": [],
+      "motivo": null
+    },
+    {
+      "id": "V002",
+      "descricao": "`cnpj_orgao` é um CNPJ com dígito verificador válido",
+      "dimensao": "validade",
+      "severidade": "erro",
+      "colunas": [
+        "cnpj_orgao"
+      ],
+      "status": "passou",
+      "avaliadas": 6000,
+      "falhas": 0,
+      "pct_falha": 0.0,
+      "aprovacao": 1.0,
+      "exemplos": [],
+      "motivo": null
+    },
+    {
+      "id": "V003",
+      "descricao": "CNPJ do fornecedor (pessoa jurídica) com dígito verificador válido",
+      "dimensao": "validade",
+      "severidade": "erro",
+      "colunas": [
+        "ni_fornecedor"
+      ],
+      "status": "falhou",
+      "avaliadas": 5670,
+      "falhas": 2,
+      "pct_falha": 0.04,
+      "aprovacao": 0.999647,
+      "exemplos": [
+        {
+          "ni_fornecedor": "CPF oculto (pessoa física)"
+        },
+        {
+          "ni_fornecedor": "CPF oculto (pessoa física)"
+        }
+      ],
+      "motivo": null
+    },
+    {
+      "id": "V004",
+      "descricao": "CPF do fornecedor (pessoa física) com dígito verificador válido",
+      "dimensao": "validade",
+      "severidade": "erro",
+      "colunas": [
+        "ni_fornecedor"
+      ],
+      "status": "falhou",
+      "avaliadas": 268,
+      "falhas": 1,
+      "pct_falha": 0.37,
+      "aprovacao": 0.996269,
+      "exemplos": [
+        {
+          "ni_fornecedor": "CPF oculto (pessoa física)"
+        }
+      ],
+      "motivo": null
+    },
+    {
+      "id": "V005",
+      "descricao": "tipo de pessoa do fornecedor no domínio PF/PJ/PE",
+      "dimensao": "validade",
+      "severidade": "erro",
+      "colunas": [
+        "tipo_pessoa"
+      ],
+      "status": "passou",
+      "avaliadas": 6000,
+      "falhas": 0,
+      "pct_falha": 0.0,
+      "aprovacao": 1.0,
+      "exemplos": [],
+      "motivo": null
+    },
+    {
+      "id": "V006",
+      "descricao": "UF da unidade é uma das 27 UFs",
+      "dimensao": "validade",
+      "severidade": "erro",
+      "colunas": [
+        "uf_sigla"
+      ],
+      "status": "passou",
+      "avaliadas": 6000,
+      "falhas": 0,
+      "pct_falha": 0.0,
+      "aprovacao": 1.0,
+      "exemplos": [],
+      "motivo": null
+    },
+    {
+      "id": "V007",
+      "descricao": "`valor_global` é numérico",
+      "dimensao": "validade",
+      "severidade": "erro",
+      "colunas": [
+        "valor_global"
+      ],
+      "status": "passou",
+      "avaliadas": 6000,
+      "falhas": 0,
+      "pct_falha": 0.0,
+      "aprovacao": 1.0,
+      "exemplos": [],
+      "motivo": null
+    },
+    {
+      "id": "V008",
+      "descricao": "`data_assinatura` é uma data válida (AAAA-MM-DD)",
+      "dimensao": "validade",
+      "severidade": "erro",
+      "colunas": [
+        "data_assinatura"
+      ],
+      "status": "passou",
+      "avaliadas": 6000,
+      "falhas": 0,
+      "pct_falha": 0.0,
+      "aprovacao": 1.0,
+      "exemplos": [],
+      "motivo": null
+    },
+    {
+      "id": "V009",
+      "descricao": "`data_vigencia_inicio` é uma data válida (AAAA-MM-DD)",
+      "dimensao": "validade",
+      "severidade": "aviso",
+      "colunas": [
+        "data_vigencia_inicio"
+      ],
+      "status": "passou",
+      "avaliadas": 6000,
+      "falhas": 0,
+      "pct_falha": 0.0,
+      "aprovacao": 1.0,
+      "exemplos": [],
+      "motivo": null
+    },
+    {
+      "id": "V010",
+      "descricao": "`data_vigencia_fim` é uma data válida (AAAA-MM-DD)",
+      "dimensao": "validade",
+      "severidade": "aviso",
+      "colunas": [
+        "data_vigencia_fim"
+      ],
+      "status": "passou",
+      "avaliadas": 5999,
+      "falhas": 0,
+      "pct_falha": 0.0,
+      "aprovacao": 1.0,
+      "exemplos": [],
+      "motivo": null
+    },
+    {
+      "id": "V011",
+      "descricao": "`valor_global` sem valor extremo (IQR, k=3)",
+      "dimensao": "validade",
+      "severidade": "aviso",
+      "colunas": [
+        "valor_global"
+      ],
+      "status": "falhou",
+      "avaliadas": 6000,
+      "falhas": 714,
+      "pct_falha": 11.9,
+      "aprovacao": 0.881,
+      "exemplos": [
+        {
+          "valor_global": 5104000.0
+        },
+        {
+          "valor_global": 436399.54
+        },
+        {
+          "valor_global": 170000.0
+        },
+        {
+          "valor_global": 137366000.0
+        },
+        {
+          "valor_global": 150000.0
+        }
+      ],
+      "motivo": null
+    },
+    {
+      "id": "V012",
+      "descricao": "`valor_global` sem valor extremo (MAD (escala log10), limite=3.5)",
+      "dimensao": "validade",
+      "severidade": "aviso",
+      "colunas": [
+        "valor_global"
+      ],
+      "status": "falhou",
+      "avaliadas": 5955,
+      "falhas": 21,
+      "pct_falha": 0.35,
+      "aprovacao": 0.996474,
+      "exemplos": [
+        {
+          "valor_global": 137366000.0
+        },
+        {
+          "valor_global": 190000000.0
+        },
+        {
+          "valor_global": 85726852.44
+        },
+        {
+          "valor_global": 90519439.98
+        },
+        {
+          "valor_global": 240000000.0
+        }
+      ],
+      "motivo": null
+    },
+    {
+      "id": "K001",
+      "descricao": "`valor_global` não é negativo",
+      "dimensao": "consistencia",
+      "severidade": "erro",
+      "colunas": [
+        "valor_global"
+      ],
+      "status": "passou",
+      "avaliadas": 6000,
+      "falhas": 0,
+      "pct_falha": 0.0,
+      "aprovacao": 1.0,
+      "exemplos": [],
+      "motivo": null
+    },
+    {
+      "id": "K002",
+      "descricao": "`valor_inicial` não é negativo",
+      "dimensao": "consistencia",
+      "severidade": "erro",
+      "colunas": [
+        "valor_inicial"
+      ],
+      "status": "passou",
+      "avaliadas": 6000,
+      "falhas": 0,
+      "pct_falha": 0.0,
+      "aprovacao": 1.0,
+      "exemplos": [],
+      "motivo": null
+    },
+    {
+      "id": "K003",
+      "descricao": "fim da vigência não é anterior ao início",
+      "dimensao": "consistencia",
+      "severidade": "erro",
+      "colunas": [
+        "data_vigencia_inicio",
+        "data_vigencia_fim"
+      ],
+      "status": "passou",
+      "avaliadas": 5999,
+      "falhas": 0,
+      "pct_falha": 0.0,
+      "aprovacao": 1.0,
+      "exemplos": [],
+      "motivo": null
+    },
+    {
+      "id": "K004",
+      "descricao": "publicação não é anterior à assinatura",
+      "dimensao": "consistencia",
+      "severidade": "aviso",
+      "colunas": [
+        "data_assinatura",
+        "data_publicacao"
+      ],
+      "status": "falhou",
+      "avaliadas": 6000,
+      "falhas": 7,
+      "pct_falha": 0.12,
+      "aprovacao": 0.998833,
+      "exemplos": [
+        {
+          "data_assinatura": "2025-02-27",
+          "data_publicacao": "2025-01-07"
+        },
+        {
+          "data_assinatura": "2025-10-31",
+          "data_publicacao": "2025-01-17"
+        },
+        {
+          "data_assinatura": "2025-01-27",
+          "data_publicacao": "2025-01-20"
+        },
+        {
+          "data_assinatura": "2025-02-05",
+          "data_publicacao": "2025-02-04"
+        },
+        {
+          "data_assinatura": "2026-01-19",
+          "data_publicacao": "2025-02-06"
+        }
+      ],
+      "motivo": null
+    },
+    {
+      "id": "K005",
+      "descricao": "código IBGE do município pertence à UF informada (dois primeiros dígitos)",
+      "dimensao": "consistencia",
+      "severidade": "erro",
+      "colunas": [
+        "codigo_ibge",
+        "uf_sigla"
+      ],
+      "status": "passou",
+      "avaliadas": 6000,
+      "falhas": 0,
+      "pct_falha": 0.0,
+      "aprovacao": 1.0,
+      "exemplos": [],
+      "motivo": null
+    },
+    {
+      "id": "A001",
+      "descricao": "registro atualizado em até 730 dias antes da extração",
+      "dimensao": "atualidade",
+      "severidade": "aviso",
+      "colunas": [
+        "data_atualizacao"
+      ],
+      "status": "passou",
+      "avaliadas": 6000,
+      "falhas": 0,
+      "pct_falha": 0.0,
+      "aprovacao": 1.0,
+      "exemplos": [],
+      "motivo": null
+    }
+  ]
+}

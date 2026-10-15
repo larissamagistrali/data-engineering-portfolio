@@ -1,0 +1,60 @@
+version: 2
+
+models:
+  - name: int_order_items_agg
+    description: Itens agregados por pedido (quantidade, valor de itens, frete e total).
+    columns:
+      - name: order_id
+        description: Chave do pedido (1 linha por pedido com itens).
+        data_tests: [unique, not_null]
+      - name: order_value
+        description: Itens + frete em R$.
+        data_tests: [non_negative]
+  - name: int_order_payments_agg
+    description: Pagamentos consolidados por pedido, com a forma de pagamento principal.
+    columns:
+      - name: order_id
+        description: Chave do pedido.
+        data_tests: [unique, not_null]
+      - name: main_payment_type
+        description: Forma de pagamento de maior valor no pedido.
+  - name: int_order_reviews_latest
+    description: Avaliação mais recente por pedido (remove duplicidades de avaliação).
+    columns:
+      - name: order_id
+        description: Chave do pedido avaliado.
+        data_tests: [unique, not_null]
+      - name: review_score
+        description: Nota de 1 a 5.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5]
+                quote: false
+  - name: int_orders_delivery
+    description: Métricas logísticas por pedido (prazo, atraso, status de entrega).
+    columns:
+      - name: order_id
+        description: Chave do pedido.
+        data_tests: [unique, not_null]
+      - name: delivery_status
+        description: no_prazo, atrasado ou nao_entregue.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [no_prazo, atrasado, nao_entregue]
+      - name: delivery_days
+        description: Dias entre a compra e a entrega ao cliente.
+        data_tests: [non_negative]
+      - name: delivered_at
+        description: Entrega ao cliente (não pode ser anterior à compra).
+        data_tests:
+          - column_not_before:
+              arguments:
+                other_column: purchased_at
+  - name: int_order_items_enriched
+    description: Itens com contexto de pedido, cliente, vendedor e categoria.
+    columns:
+      - name: item_total
+        description: Preço + frete do item.
+        data_tests: [non_negative]

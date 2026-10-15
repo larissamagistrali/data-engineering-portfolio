@@ -1,0 +1,8 @@
+# Perfil local: um arquivo DuckDB. O caminho vem de OLIST_DUCKDB (padrão relativo à pasta dbt/).
+olist_warehouse:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('OLIST_DUCKDB', '../data/raw/olist.duckdb') }}"
+      threads: 4

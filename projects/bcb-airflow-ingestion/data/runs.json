@@ -1,0 +1,217 @@
+{
+  "dag_id": "bcb_ingestion",
+  "fonte": "metastore sqlite do Airflow 3.3.2 (tabelas dag_run e task_instance), via scripts de verificação",
+  "modo": "airflow dags test (execução local, in-process, sem scheduler)",
+  "execucoes": [
+    {
+      "run_id": "manual__2026-10-14T22:46:19.484277+00:00",
+      "tipo": "manual",
+      "data_logica": "2026-10-13 00:00:00.000000",
+      "duracao_run_metastore_s": null,
+      "estado": "success",
+      "inicio_utc": "2026-10-14T22:46:20.174649",
+      "fim_utc": "2026-10-14T22:47:23.550018",
+      "duracao_s": 63.38,
+      "tarefas_total": 13,
+      "tarefas_sucesso": 13,
+      "tarefas": [
+        {
+          "tarefa": "end",
+          "indice_mapeado": null,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 0.01
+        },
+        {
+          "tarefa": "fetch",
+          "indice_mapeado": 0,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 36.66
+        },
+        {
+          "tarefa": "fetch",
+          "indice_mapeado": 1,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 19.25
+        },
+        {
+          "tarefa": "fetch",
+          "indice_mapeado": 2,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 1.48
+        },
+        {
+          "tarefa": "fetch",
+          "indice_mapeado": 3,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 1.64
+        },
+        {
+          "tarefa": "fetch",
+          "indice_mapeado": 4,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 1.55
+        },
+        {
+          "tarefa": "start",
+          "indice_mapeado": null,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 2.18
+        },
+        {
+          "tarefa": "validate",
+          "indice_mapeado": 0,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 0.19
+        },
+        {
+          "tarefa": "validate",
+          "indice_mapeado": 1,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 0.04
+        },
+        {
+          "tarefa": "validate",
+          "indice_mapeado": 2,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 0.04
+        },
+        {
+          "tarefa": "validate",
+          "indice_mapeado": 3,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 0.1
+        },
+        {
+          "tarefa": "validate",
+          "indice_mapeado": 4,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 0.04
+        },
+        {
+          "tarefa": "write",
+          "indice_mapeado": null,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 0.05
+        }
+      ]
+    },
+    {
+      "run_id": "manual__2026-10-14T22:47:31.614676+00:00",
+      "tipo": "manual",
+      "data_logica": "2026-10-14 00:00:00.000000",
+      "duracao_run_metastore_s": null,
+      "estado": "success",
+      "inicio_utc": "2026-10-14T22:47:32.185106",
+      "fim_utc": "2026-10-14T22:47:35.762662",
+      "duracao_s": 3.58,
+      "tarefas_total": 13,
+      "tarefas_sucesso": 13,
+      "tarefas": [
+        {
+          "tarefa": "end",
+          "indice_mapeado": null,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 0.01
+        },
+        {
+          "tarefa": "fetch",
+          "indice_mapeado": 0,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 0.17
+        },
+        {
+          "tarefa": "fetch",
+          "indice_mapeado": 1,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 0.18
+        },
+        {
+          "tarefa": "fetch",
+          "indice_mapeado": 2,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 0.25
+        },
+        {
+          "tarefa": "fetch",
+          "indice_mapeado": 3,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 0.33
+        },
+        {
+          "tarefa": "fetch",
+          "indice_mapeado": 4,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 0.3
+        },
+        {
+          "tarefa": "start",
+          "indice_mapeado": null,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 1.74
+        },
+        {
+          "tarefa": "validate",
+          "indice_mapeado": 0,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 0.22
+        },
+        {
+          "tarefa": "validate",
+          "indice_mapeado": 1,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 0.05
+        },
+        {
+          "tarefa": "validate",
+          "indice_mapeado": 2,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 0.04
+        },
+        {
+          "tarefa": "validate",
+          "indice_mapeado": 3,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 0.05
+        },
+        {
+          "tarefa": "validate",
+          "indice_mapeado": 4,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 0.04
+        },
+        {
+          "tarefa": "write",
+          "indice_mapeado": null,
+          "estado": "success",
+          "tentativa": 1,
+          "duracao_s": 0.05
+        }
+      ]
+    }
+  ]
+}

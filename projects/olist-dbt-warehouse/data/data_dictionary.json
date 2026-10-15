@@ -1,0 +1,1649 @@
+[
+ {
+  "model": "stg_customers",
+  "layer": "staging",
+  "description": "Clientes por pedido, com CEP padronizado (5 dígitos) e UF em maiúsculas.",
+  "documented_columns": [
+   {
+    "column": "customer_id",
+    "description": "Chave do cliente por pedido.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "customer_unique_id",
+    "description": "Identificador estável do cliente, usado para recompra.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "zip_code_prefix",
+    "description": "Prefixo do CEP (5 dígitos).",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "city",
+    "description": "Cidade (minúsculas, sem acento, como no dado original).",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "state",
+    "description": "UF do cliente.",
+    "type": "VARCHAR"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "customer_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "customer_unique_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "zip_code_prefix",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "city",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "state",
+    "type": "VARCHAR"
+   }
+  ]
+ },
+ {
+  "model": "stg_order_items",
+  "layer": "staging",
+  "description": "Itens dos pedidos com preço e frete em decimal(12,2).",
+  "documented_columns": [
+   {
+    "column": "order_id",
+    "description": "Pedido do item.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "order_item_id",
+    "description": "Sequencial do item no pedido (1, 2, ...).",
+    "type": "INTEGER"
+   },
+   {
+    "column": "product_id",
+    "description": "Produto vendido.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "seller_id",
+    "description": "Vendedor do item.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "price",
+    "description": "Preço do item em R$.",
+    "type": "DECIMAL(12,2)"
+   },
+   {
+    "column": "freight_value",
+    "description": "Frete do item em R$.",
+    "type": "DECIMAL(12,2)"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "order_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "order_item_id",
+    "type": "INTEGER"
+   },
+   {
+    "column": "product_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "seller_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "shipping_limit_at",
+    "type": "TIMESTAMP"
+   },
+   {
+    "column": "price",
+    "type": "DECIMAL(12,2)"
+   },
+   {
+    "column": "freight_value",
+    "type": "DECIMAL(12,2)"
+   }
+  ]
+ },
+ {
+  "model": "stg_order_payments",
+  "layer": "staging",
+  "description": "Pagamentos por pedido.",
+  "documented_columns": [
+   {
+    "column": "order_id",
+    "description": "Pedido pago.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "payment_type",
+    "description": "Forma de pagamento.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "payment_installments",
+    "description": "Número de parcelas.",
+    "type": "INTEGER"
+   },
+   {
+    "column": "payment_value",
+    "description": "Valor pago em R$.",
+    "type": "DECIMAL(12,2)"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "order_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "payment_sequential",
+    "type": "INTEGER"
+   },
+   {
+    "column": "payment_type",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "payment_installments",
+    "type": "INTEGER"
+   },
+   {
+    "column": "payment_value",
+    "type": "DECIMAL(12,2)"
+   }
+  ]
+ },
+ {
+  "model": "stg_order_reviews",
+  "layer": "staging",
+  "description": "Avaliações dos pedidos (nota 1 a 5).",
+  "documented_columns": [
+   {
+    "column": "review_id",
+    "description": "Chave da avaliação.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "order_id",
+    "description": "Pedido avaliado.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "review_score",
+    "description": "Nota de 1 a 5.",
+    "type": "INTEGER"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "review_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "order_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "review_score",
+    "type": "INTEGER"
+   },
+   {
+    "column": "comment_title",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "comment_message",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "review_created_at",
+    "type": "TIMESTAMP"
+   },
+   {
+    "column": "review_answered_at",
+    "type": "TIMESTAMP"
+   }
+  ]
+ },
+ {
+  "model": "stg_orders",
+  "layer": "staging",
+  "description": "Pedidos com timestamps tipados e status normalizado.",
+  "documented_columns": [
+   {
+    "column": "order_id",
+    "description": "Chave do pedido.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "customer_id",
+    "description": "Cliente do pedido.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "order_status",
+    "description": "Status do pedido.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "purchased_at",
+    "description": "Momento da compra.",
+    "type": "TIMESTAMP"
+   },
+   {
+    "column": "approved_at",
+    "description": "Aprovação do pagamento.",
+    "type": "TIMESTAMP"
+   },
+   {
+    "column": "shipped_at",
+    "description": "Postagem na transportadora.",
+    "type": "TIMESTAMP"
+   },
+   {
+    "column": "delivered_at",
+    "description": "Entrega ao cliente.",
+    "type": "TIMESTAMP"
+   },
+   {
+    "column": "estimated_delivery_at",
+    "description": "Data estimada de entrega (prometida ao cliente).",
+    "type": "TIMESTAMP"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "order_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "customer_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "order_status",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "purchased_at",
+    "type": "TIMESTAMP"
+   },
+   {
+    "column": "approved_at",
+    "type": "TIMESTAMP"
+   },
+   {
+    "column": "shipped_at",
+    "type": "TIMESTAMP"
+   },
+   {
+    "column": "delivered_at",
+    "type": "TIMESTAMP"
+   },
+   {
+    "column": "estimated_delivery_at",
+    "type": "TIMESTAMP"
+   }
+  ]
+ },
+ {
+  "model": "stg_product_category_translation",
+  "layer": "staging",
+  "description": "Dicionário categoria PT para EN.",
+  "documented_columns": [
+   {
+    "column": "category_name",
+    "description": "Categoria em português.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "category_name_en",
+    "description": "Categoria em inglês.",
+    "type": "VARCHAR"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "category_name",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "category_name_en",
+    "type": "VARCHAR"
+   }
+  ]
+ },
+ {
+  "model": "stg_products",
+  "layer": "staging",
+  "description": "Produtos com nomes de coluna corrigidos e categoria ausente = sem_categoria.",
+  "documented_columns": [
+   {
+    "column": "product_id",
+    "description": "Chave do produto.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "category_name",
+    "description": "Categoria em português.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "weight_g",
+    "description": "Peso em gramas.",
+    "type": "DOUBLE"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "product_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "category_name",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "name_length",
+    "type": "INTEGER"
+   },
+   {
+    "column": "description_length",
+    "type": "INTEGER"
+   },
+   {
+    "column": "photos_qty",
+    "type": "INTEGER"
+   },
+   {
+    "column": "weight_g",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "length_cm",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "height_cm",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "width_cm",
+    "type": "DOUBLE"
+   }
+  ]
+ },
+ {
+  "model": "stg_sellers",
+  "layer": "staging",
+  "description": "Vendedores.",
+  "documented_columns": [
+   {
+    "column": "seller_id",
+    "description": "Chave do vendedor.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "state",
+    "description": "UF do vendedor.",
+    "type": "VARCHAR"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "seller_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "zip_code_prefix",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "city",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "state",
+    "type": "VARCHAR"
+   }
+  ]
+ },
+ {
+  "model": "int_order_items_agg",
+  "layer": "intermediate",
+  "description": "Itens agregados por pedido (quantidade, valor de itens, frete e total).",
+  "documented_columns": [
+   {
+    "column": "order_id",
+    "description": "Chave do pedido (1 linha por pedido com itens).",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "order_value",
+    "description": "Itens + frete em R$.",
+    "type": "DECIMAL(38,2)"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "order_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "items_count",
+    "type": "BIGINT"
+   },
+   {
+    "column": "distinct_products",
+    "type": "BIGINT"
+   },
+   {
+    "column": "distinct_sellers",
+    "type": "BIGINT"
+   },
+   {
+    "column": "items_value",
+    "type": "DECIMAL(38,2)"
+   },
+   {
+    "column": "freight_value",
+    "type": "DECIMAL(38,2)"
+   },
+   {
+    "column": "order_value",
+    "type": "DECIMAL(38,2)"
+   }
+  ]
+ },
+ {
+  "model": "int_order_items_enriched",
+  "layer": "intermediate",
+  "description": "Itens com contexto de pedido, cliente, vendedor e categoria.",
+  "documented_columns": [
+   {
+    "column": "item_total",
+    "description": "Preço + frete do item.",
+    "type": "DECIMAL(13,2)"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "order_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "order_item_id",
+    "type": "INTEGER"
+   },
+   {
+    "column": "product_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "seller_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "purchase_date",
+    "type": "DATE"
+   },
+   {
+    "column": "order_status",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "customer_unique_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "customer_state",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "seller_state",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "same_state",
+    "type": "BOOLEAN"
+   },
+   {
+    "column": "category_en",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "category_pt",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "price",
+    "type": "DECIMAL(12,2)"
+   },
+   {
+    "column": "freight_value",
+    "type": "DECIMAL(12,2)"
+   },
+   {
+    "column": "item_total",
+    "type": "DECIMAL(13,2)"
+   }
+  ]
+ },
+ {
+  "model": "int_order_payments_agg",
+  "layer": "intermediate",
+  "description": "Pagamentos consolidados por pedido, com a forma de pagamento principal.",
+  "documented_columns": [
+   {
+    "column": "order_id",
+    "description": "Chave do pedido.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "main_payment_type",
+    "description": "Forma de pagamento de maior valor no pedido.",
+    "type": "VARCHAR"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "order_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "payment_value",
+    "type": "DECIMAL(38,2)"
+   },
+   {
+    "column": "payments_count",
+    "type": "BIGINT"
+   },
+   {
+    "column": "max_installments",
+    "type": "INTEGER"
+   },
+   {
+    "column": "main_payment_type",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "used_voucher",
+    "type": "BOOLEAN"
+   }
+  ]
+ },
+ {
+  "model": "int_order_reviews_latest",
+  "layer": "intermediate",
+  "description": "Avaliação mais recente por pedido (remove duplicidades de avaliação).",
+  "documented_columns": [
+   {
+    "column": "order_id",
+    "description": "Chave do pedido avaliado.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "review_score",
+    "description": "Nota de 1 a 5.",
+    "type": "INTEGER"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "order_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "review_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "review_score",
+    "type": "INTEGER"
+   },
+   {
+    "column": "has_comment",
+    "type": "BOOLEAN"
+   },
+   {
+    "column": "review_created_at",
+    "type": "TIMESTAMP"
+   }
+  ]
+ },
+ {
+  "model": "int_orders_delivery",
+  "layer": "intermediate",
+  "description": "Métricas logísticas por pedido (prazo, atraso, status de entrega).",
+  "documented_columns": [
+   {
+    "column": "order_id",
+    "description": "Chave do pedido.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "delivery_status",
+    "description": "no_prazo, atrasado ou nao_entregue.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "delivery_days",
+    "description": "Dias entre a compra e a entrega ao cliente.",
+    "type": "BIGINT"
+   },
+   {
+    "column": "delivered_at",
+    "description": "Entrega ao cliente (não pode ser anterior à compra).",
+    "type": "TIMESTAMP"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "order_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "order_status",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "purchased_at",
+    "type": "TIMESTAMP"
+   },
+   {
+    "column": "delivered_at",
+    "type": "TIMESTAMP"
+   },
+   {
+    "column": "estimated_delivery_at",
+    "type": "TIMESTAMP"
+   },
+   {
+    "column": "is_delivered",
+    "type": "BOOLEAN"
+   },
+   {
+    "column": "approval_hours",
+    "type": "BIGINT"
+   },
+   {
+    "column": "delivery_days",
+    "type": "BIGINT"
+   },
+   {
+    "column": "estimated_days",
+    "type": "BIGINT"
+   },
+   {
+    "column": "delay_days",
+    "type": "BIGINT"
+   },
+   {
+    "column": "is_late",
+    "type": "BOOLEAN"
+   },
+   {
+    "column": "delivery_status",
+    "type": "VARCHAR"
+   }
+  ]
+ },
+ {
+  "model": "dim_customers",
+  "layer": "marts",
+  "description": "Clientes únicos (customer_unique_id) com localização mais recente, datas e valor de vida.",
+  "documented_columns": [
+   {
+    "column": "customer_unique_id",
+    "description": "Chave do cliente.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "state",
+    "description": "UF mais recente do cliente.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "first_order_at",
+    "description": "Momento da primeira compra.",
+    "type": "TIMESTAMP"
+   },
+   {
+    "column": "orders_count",
+    "description": "Quantidade de pedidos do cliente.",
+    "type": "BIGINT"
+   },
+   {
+    "column": "lifetime_value",
+    "description": "Soma de itens + frete dos pedidos válidos, em R$.",
+    "type": "DECIMAL(38,2)"
+   },
+   {
+    "column": "is_repeat_customer",
+    "description": "Verdadeiro se fez mais de um pedido.",
+    "type": "BOOLEAN"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "customer_unique_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "state",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "city",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "zip_code_prefix",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "first_order_at",
+    "type": "TIMESTAMP"
+   },
+   {
+    "column": "last_order_at",
+    "type": "TIMESTAMP"
+   },
+   {
+    "column": "orders_count",
+    "type": "BIGINT"
+   },
+   {
+    "column": "lifetime_value",
+    "type": "DECIMAL(38,2)"
+   },
+   {
+    "column": "is_repeat_customer",
+    "type": "BOOLEAN"
+   }
+  ]
+ },
+ {
+  "model": "dim_date",
+  "layer": "marts",
+  "description": "Calendário diário cobrindo o período de compras.",
+  "documented_columns": [
+   {
+    "column": "date_day",
+    "description": "Dia (chave).",
+    "type": "DATE"
+   },
+   {
+    "column": "year_month",
+    "description": "Ano-mês no formato AAAA-MM.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "month_start",
+    "description": "Primeiro dia do mês.",
+    "type": "DATE"
+   },
+   {
+    "column": "day_name_pt",
+    "description": "Nome do dia da semana em português.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "is_weekend",
+    "description": "Verdadeiro para sábado e domingo.",
+    "type": "BOOLEAN"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "date_day",
+    "type": "DATE"
+   },
+   {
+    "column": "year",
+    "type": "BIGINT"
+   },
+   {
+    "column": "quarter",
+    "type": "BIGINT"
+   },
+   {
+    "column": "month",
+    "type": "BIGINT"
+   },
+   {
+    "column": "year_month",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "month_start",
+    "type": "DATE"
+   },
+   {
+    "column": "iso_day_of_week",
+    "type": "BIGINT"
+   },
+   {
+    "column": "day_name_pt",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "week_of_year",
+    "type": "BIGINT"
+   },
+   {
+    "column": "is_weekend",
+    "type": "BOOLEAN"
+   }
+  ]
+ },
+ {
+  "model": "dim_products",
+  "layer": "marts",
+  "description": "Produtos com categoria PT/EN e classe de peso.",
+  "documented_columns": [
+   {
+    "column": "product_id",
+    "description": "Chave do produto.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "category_en",
+    "description": "Categoria em inglês (ou o nome PT quando não há tradução).",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "weight_class",
+    "description": "leve (<500 g), medio (<5 kg), pesado ou desconhecido.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "volume_cm3",
+    "description": "Volume da embalagem em cm3.",
+    "type": "DOUBLE"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "product_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "category_pt",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "category_en",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "has_category",
+    "type": "BOOLEAN"
+   },
+   {
+    "column": "name_length",
+    "type": "INTEGER"
+   },
+   {
+    "column": "description_length",
+    "type": "INTEGER"
+   },
+   {
+    "column": "photos_qty",
+    "type": "INTEGER"
+   },
+   {
+    "column": "weight_g",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "volume_cm3",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "weight_class",
+    "type": "VARCHAR"
+   }
+  ]
+ },
+ {
+  "model": "dim_sellers",
+  "layer": "marts",
+  "description": "Vendedores com região.",
+  "documented_columns": [
+   {
+    "column": "seller_id",
+    "description": "Chave do vendedor.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "region",
+    "description": "Região do Brasil da UF do vendedor.",
+    "type": "VARCHAR"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "seller_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "zip_code_prefix",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "city",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "state",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "region",
+    "type": "VARCHAR"
+   }
+  ]
+ },
+ {
+  "model": "fct_order_items",
+  "layer": "marts",
+  "description": "Fato de itens (grão: pedido + item).",
+  "documented_columns": [
+   {
+    "column": "order_id",
+    "description": "Pedido.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "product_id",
+    "description": "Produto (dim_products).",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "seller_id",
+    "description": "Vendedor (dim_sellers).",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "purchase_date",
+    "description": "Dia da compra (dim_date).",
+    "type": "DATE"
+   },
+   {
+    "column": "price",
+    "description": "Preço do item em R$.",
+    "type": "DECIMAL(12,2)"
+   },
+   {
+    "column": "item_total",
+    "description": "Preço + frete em R$.",
+    "type": "DECIMAL(13,2)"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "order_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "order_item_id",
+    "type": "INTEGER"
+   },
+   {
+    "column": "product_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "seller_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "purchase_date",
+    "type": "DATE"
+   },
+   {
+    "column": "order_status",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "is_valid_order",
+    "type": "BOOLEAN"
+   },
+   {
+    "column": "customer_unique_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "customer_state",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "seller_state",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "same_state",
+    "type": "BOOLEAN"
+   },
+   {
+    "column": "category_en",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "price",
+    "type": "DECIMAL(12,2)"
+   },
+   {
+    "column": "freight_value",
+    "type": "DECIMAL(12,2)"
+   },
+   {
+    "column": "item_total",
+    "type": "DECIMAL(13,2)"
+   }
+  ]
+ },
+ {
+  "model": "fct_orders",
+  "layer": "marts",
+  "description": "Fato de pedidos (grão: 1 linha por pedido) com valor, pagamento, avaliação e métricas de entrega. is_valid_order exclui cancelados e indisponíveis.",
+  "documented_columns": [
+   {
+    "column": "order_id",
+    "description": "Chave do pedido.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "customer_unique_id",
+    "description": "Cliente (dim_customers).",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "purchase_date",
+    "description": "Dia da compra (dim_date).",
+    "type": "DATE"
+   },
+   {
+    "column": "order_status",
+    "description": "Status do pedido.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "items_count",
+    "description": "Número de itens do pedido (0 quando o pedido não tem itens).",
+    "type": "BIGINT"
+   },
+   {
+    "column": "order_value",
+    "description": "Itens + frete em R$.",
+    "type": "DECIMAL(38,2)"
+   },
+   {
+    "column": "payment_value",
+    "description": "Total pago em R$ (soma das formas de pagamento).",
+    "type": "DECIMAL(38,2)"
+   },
+   {
+    "column": "max_installments",
+    "description": "Maior número de parcelas entre os pagamentos.",
+    "type": "INTEGER"
+   },
+   {
+    "column": "main_payment_type",
+    "description": "Forma de pagamento principal.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "review_score",
+    "description": "Nota da avaliação mais recente (1 a 5).",
+    "type": "INTEGER"
+   },
+   {
+    "column": "delivery_days",
+    "description": "Dias da compra até a entrega.",
+    "type": "BIGINT"
+   },
+   {
+    "column": "delay_days",
+    "description": "Dias de diferença entre a entrega e a estimativa (positivo = atraso).",
+    "type": "BIGINT"
+   },
+   {
+    "column": "is_late",
+    "description": "Entregue depois da data estimada.",
+    "type": "BOOLEAN"
+   },
+   {
+    "column": "delivery_status",
+    "description": "no_prazo, atrasado ou nao_entregue.",
+    "type": "VARCHAR"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "order_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "customer_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "customer_unique_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "customer_state",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "purchase_date",
+    "type": "DATE"
+   },
+   {
+    "column": "purchase_month",
+    "type": "DATE"
+   },
+   {
+    "column": "order_status",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "is_valid_order",
+    "type": "BOOLEAN"
+   },
+   {
+    "column": "items_count",
+    "type": "BIGINT"
+   },
+   {
+    "column": "items_value",
+    "type": "DECIMAL(38,2)"
+   },
+   {
+    "column": "freight_value",
+    "type": "DECIMAL(38,2)"
+   },
+   {
+    "column": "order_value",
+    "type": "DECIMAL(38,2)"
+   },
+   {
+    "column": "payment_value",
+    "type": "DECIMAL(38,2)"
+   },
+   {
+    "column": "max_installments",
+    "type": "INTEGER"
+   },
+   {
+    "column": "main_payment_type",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "review_score",
+    "type": "INTEGER"
+   },
+   {
+    "column": "is_delivered",
+    "type": "BOOLEAN"
+   },
+   {
+    "column": "delivery_days",
+    "type": "BIGINT"
+   },
+   {
+    "column": "estimated_days",
+    "type": "BIGINT"
+   },
+   {
+    "column": "delay_days",
+    "type": "BIGINT"
+   },
+   {
+    "column": "is_late",
+    "type": "BOOLEAN"
+   },
+   {
+    "column": "delivery_status",
+    "type": "VARCHAR"
+   }
+  ]
+ },
+ {
+  "model": "kpi_category_reviews",
+  "layer": "gold",
+  "description": "Nota média e % de notas baixas (1 e 2) por categoria de produto.",
+  "documented_columns": [
+   {
+    "column": "category_en",
+    "description": "Categoria em inglês.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "avg_review_score",
+    "description": "Nota média (1 a 5) dos pedidos que contêm a categoria.",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "pct_low_score",
+    "description": "% de avaliações com nota 1 ou 2.",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "revenue_items",
+    "description": "Receita de itens da categoria, em R$.",
+    "type": "DECIMAL(38,2)"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "category_en",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "items_sold",
+    "type": "BIGINT"
+   },
+   {
+    "column": "orders",
+    "type": "BIGINT"
+   },
+   {
+    "column": "reviewed_orders",
+    "type": "BIGINT"
+   },
+   {
+    "column": "avg_review_score",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "low_score_orders",
+    "type": "BIGINT"
+   },
+   {
+    "column": "pct_low_score",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "late_orders",
+    "type": "BIGINT"
+   },
+   {
+    "column": "revenue_items",
+    "type": "DECIMAL(38,2)"
+   }
+  ]
+ },
+ {
+  "model": "kpi_delivery_sla",
+  "layer": "gold",
+  "description": "SLA de entrega por mês e UF (contagens e somas reagregáveis).",
+  "documented_columns": [
+   {
+    "column": "customer_state",
+    "description": "UF do cliente.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "delivered_orders",
+    "description": "Pedidos entregues com data de entrega conhecida.",
+    "type": "BIGINT"
+   },
+   {
+    "column": "pct_late",
+    "description": "% de pedidos entregues com atraso.",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "avg_delivery_days",
+    "description": "Média de dias da compra à entrega.",
+    "type": "DOUBLE"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "month",
+    "type": "DATE"
+   },
+   {
+    "column": "customer_state",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "delivered_orders",
+    "type": "BIGINT"
+   },
+   {
+    "column": "late_orders",
+    "type": "BIGINT"
+   },
+   {
+    "column": "delivery_days_sum",
+    "type": "HUGEINT"
+   },
+   {
+    "column": "estimated_days_sum",
+    "type": "HUGEINT"
+   },
+   {
+    "column": "delay_days_sum_late",
+    "type": "HUGEINT"
+   },
+   {
+    "column": "pct_late",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "avg_delivery_days",
+    "type": "DOUBLE"
+   }
+  ]
+ },
+ {
+  "model": "kpi_monthly_revenue",
+  "layer": "gold",
+  "description": "Receita, pedidos, clientes e ticket médio por mês de compra (pedidos válidos).",
+  "documented_columns": [
+   {
+    "column": "month",
+    "description": "Mês de compra (primeiro dia do mês).",
+    "type": "DATE"
+   },
+   {
+    "column": "revenue_total",
+    "description": "Itens + frete em R$.",
+    "type": "DECIMAL(38,2)"
+   },
+   {
+    "column": "avg_ticket",
+    "description": "Receita total / pedidos com itens.",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "mom_growth_pct",
+    "description": "Crescimento da receita sobre o mês anterior, em %.",
+    "type": "DOUBLE"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "month",
+    "type": "DATE"
+   },
+   {
+    "column": "orders",
+    "type": "BIGINT"
+   },
+   {
+    "column": "orders_with_items",
+    "type": "BIGINT"
+   },
+   {
+    "column": "customers",
+    "type": "BIGINT"
+   },
+   {
+    "column": "revenue_items",
+    "type": "DECIMAL(38,2)"
+   },
+   {
+    "column": "revenue_freight",
+    "type": "DECIMAL(38,2)"
+   },
+   {
+    "column": "revenue_total",
+    "type": "DECIMAL(38,2)"
+   },
+   {
+    "column": "avg_ticket",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "mom_growth_pct",
+    "type": "DOUBLE"
+   }
+  ]
+ },
+ {
+  "model": "kpi_overview",
+  "layer": "gold",
+  "description": "Números-resumo do painel (1 linha).",
+  "documented_columns": [
+   {
+    "column": "revenue_total",
+    "description": "Receita total (itens + frete) dos pedidos válidos, em R$.",
+    "type": "DECIMAL(38,2)"
+   },
+   {
+    "column": "avg_ticket",
+    "description": "Ticket médio por pedido com itens, em R$.",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "pct_late",
+    "description": "% de pedidos entregues com atraso (entrega posterior à estimativa).",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "repeat_customer_pct",
+    "description": "% de clientes com mais de um pedido.",
+    "type": "DOUBLE"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "orders_total",
+    "type": "BIGINT"
+   },
+   {
+    "column": "orders_valid",
+    "type": "BIGINT"
+   },
+   {
+    "column": "customers",
+    "type": "BIGINT"
+   },
+   {
+    "column": "sellers",
+    "type": "BIGINT"
+   },
+   {
+    "column": "products",
+    "type": "BIGINT"
+   },
+   {
+    "column": "revenue_total",
+    "type": "DECIMAL(38,2)"
+   },
+   {
+    "column": "avg_ticket",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "pct_late",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "avg_delivery_days",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "avg_review_score",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "repeat_customer_pct",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "first_purchase_date",
+    "type": "DATE"
+   },
+   {
+    "column": "last_purchase_date",
+    "type": "DATE"
+   }
+  ]
+ },
+ {
+  "model": "kpi_repurchase_cohort",
+  "layer": "gold",
+  "description": "Coorte de recompra por mês da primeira compra.",
+  "documented_columns": [
+   {
+    "column": "cohort_month",
+    "description": "Mês da primeira compra do cliente.",
+    "type": "DATE"
+   },
+   {
+    "column": "month_offset",
+    "description": "Meses desde a primeira compra (0 = mês da coorte).",
+    "type": "BIGINT"
+   },
+   {
+    "column": "cohort_size",
+    "description": "Clientes na coorte.",
+    "type": "BIGINT"
+   },
+   {
+    "column": "retention_rate",
+    "description": "% da coorte que comprou no mês +k.",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "cumulative_repurchase_rate",
+    "description": "% da coorte com ao menos uma recompra até o mês +k.",
+    "type": "DOUBLE"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "cohort_month",
+    "type": "DATE"
+   },
+   {
+    "column": "month_offset",
+    "type": "BIGINT"
+   },
+   {
+    "column": "cohort_size",
+    "type": "BIGINT"
+   },
+   {
+    "column": "active_customers",
+    "type": "BIGINT"
+   },
+   {
+    "column": "repurchased_customers",
+    "type": "BIGINT"
+   },
+   {
+    "column": "retention_rate",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "cumulative_repurchase_rate",
+    "type": "DOUBLE"
+   }
+  ]
+ },
+ {
+  "model": "kpi_top_sellers",
+  "layer": "gold",
+  "description": "Ranking de vendedores por receita, com nota média e % de atraso.",
+  "documented_columns": [
+   {
+    "column": "seller_id",
+    "description": "Vendedor.",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "revenue_rank",
+    "description": "Posição por receita de itens.",
+    "type": "BIGINT"
+   },
+   {
+    "column": "revenue_items",
+    "description": "Receita de itens em R$.",
+    "type": "DECIMAL(38,2)"
+   },
+   {
+    "column": "pct_late",
+    "description": "% de pedidos entregues com atraso.",
+    "type": "DOUBLE"
+   }
+  ],
+  "all_columns": [
+   {
+    "column": "revenue_rank",
+    "type": "BIGINT"
+   },
+   {
+    "column": "seller_id",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "state",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "city",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "region",
+    "type": "VARCHAR"
+   },
+   {
+    "column": "orders",
+    "type": "BIGINT"
+   },
+   {
+    "column": "items",
+    "type": "HUGEINT"
+   },
+   {
+    "column": "revenue_items",
+    "type": "DECIMAL(38,2)"
+   },
+   {
+    "column": "revenue_freight",
+    "type": "DECIMAL(38,2)"
+   },
+   {
+    "column": "avg_review_score",
+    "type": "DOUBLE"
+   },
+   {
+    "column": "delivered_orders",
+    "type": "BIGINT"
+   },
+   {
+    "column": "late_orders",
+    "type": "BIGINT"
+   },
+   {
+    "column": "pct_late",
+    "type": "DOUBLE"
+   }
+  ]
+ }
+]

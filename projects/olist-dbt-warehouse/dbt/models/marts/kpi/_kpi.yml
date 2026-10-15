@@ -1,0 +1,107 @@
+version: 2
+
+models:
+  - name: kpi_overview
+    description: Números-resumo do painel (1 linha).
+    columns:
+      - name: revenue_total
+        description: Receita total (itens + frete) dos pedidos válidos, em R$.
+      - name: avg_ticket
+        description: Ticket médio por pedido com itens, em R$.
+      - name: pct_late
+        description: "% de pedidos entregues com atraso (entrega posterior à estimativa)."
+        data_tests: [non_negative]
+      - name: repeat_customer_pct
+        description: "% de clientes com mais de um pedido."
+
+  - name: kpi_monthly_revenue
+    description: Receita, pedidos, clientes e ticket médio por mês de compra (pedidos válidos).
+    columns:
+      - name: month
+        description: Mês de compra (primeiro dia do mês).
+        data_tests: [unique, not_null]
+      - name: revenue_total
+        description: Itens + frete em R$.
+        data_tests: [non_negative]
+      - name: avg_ticket
+        description: Receita total / pedidos com itens.
+        data_tests: [non_negative]
+      - name: mom_growth_pct
+        description: Crescimento da receita sobre o mês anterior, em %.
+
+  - name: kpi_delivery_sla
+    description: SLA de entrega por mês e UF (contagens e somas reagregáveis).
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [month, customer_state]
+    columns:
+      - name: customer_state
+        description: UF do cliente.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [AC, AL, AM, AP, BA, CE, DF, ES, GO, MA, MG, MS, MT, PA, PB, PE, PI, PR, RJ, RN, RO, RR, RS, SC, SE, SP, TO]
+      - name: delivered_orders
+        description: Pedidos entregues com data de entrega conhecida.
+        data_tests: [non_negative]
+      - name: pct_late
+        description: "% de pedidos entregues com atraso."
+        data_tests: [non_negative]
+      - name: avg_delivery_days
+        description: Média de dias da compra à entrega.
+
+  - name: kpi_category_reviews
+    description: Nota média e % de notas baixas (1 e 2) por categoria de produto.
+    columns:
+      - name: category_en
+        description: Categoria em inglês.
+        data_tests: [unique, not_null]
+      - name: avg_review_score
+        description: Nota média (1 a 5) dos pedidos que contêm a categoria.
+      - name: pct_low_score
+        description: "% de avaliações com nota 1 ou 2."
+        data_tests: [non_negative]
+      - name: revenue_items
+        description: Receita de itens da categoria, em R$.
+        data_tests: [non_negative]
+
+  - name: kpi_top_sellers
+    description: Ranking de vendedores por receita, com nota média e % de atraso.
+    columns:
+      - name: seller_id
+        description: Vendedor.
+        data_tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_sellers')
+                field: seller_id
+      - name: revenue_rank
+        description: Posição por receita de itens.
+      - name: revenue_items
+        description: Receita de itens em R$.
+        data_tests: [non_negative]
+      - name: pct_late
+        description: "% de pedidos entregues com atraso."
+
+  - name: kpi_repurchase_cohort
+    description: Coorte de recompra por mês da primeira compra.
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [cohort_month, month_offset]
+    columns:
+      - name: cohort_month
+        description: Mês da primeira compra do cliente.
+        data_tests: [not_null]
+      - name: month_offset
+        description: Meses desde a primeira compra (0 = mês da coorte).
+        data_tests: [non_negative]
+      - name: cohort_size
+        description: Clientes na coorte.
+      - name: retention_rate
+        description: "% da coorte que comprou no mês +k."
+      - name: cumulative_repurchase_rate
+        description: "% da coorte com ao menos uma recompra até o mês +k."

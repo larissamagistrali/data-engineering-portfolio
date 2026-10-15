@@ -1,0 +1,77 @@
+# NÃO EXECUTADO no repositório (o Docker daemon estava desligado no ambiente de desenvolvimento).
+# Sobe Kafka 4.x em KRaft (nó único), cria o tópico e roda os dois serviços Python. Ver "Limitações" no README.
+# Uso: docker compose up   (o agregado é gravado em ./data)
+services:
+  kafka:
+    image: apache/kafka:4.3.1
+    hostname: kafka
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092  # só acessível pela rede do compose
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"  # o tópico é criado explicitamente pelo kafka-init
+
+  kafka-init:
+    image: apache/kafka:4.3.1
+    depends_on:
+      - kafka
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        until /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --list >/dev/null 2>&1; do sleep 2; done
+        /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --create --if-not-exists \
+          --topic wiki-recentchange --partitions 3 --replication-factor 1
+
+  aggregator:
+    image: python:3.11-slim
+    depends_on:
+      kafka-init:
+        condition: service_completed_successfully
+    working_dir: /app
+    environment:
+      KAFKA_BOOTSTRAP: kafka:9092
+      PYTHONPATH: src
+    volumes:
+      - ./requirements.txt:/app/requirements.txt:ro
+      - ./src:/app/src:ro
+      - ./data:/app/data
+      - stats:/stats
+    command:
+      - sh
+      - -c
+      - >-
+        pip install -q -r requirements.txt &&
+        python -m wikipedia_streaming.aggregator --run-seconds 320 --out-dir /app/data
+        --producer-stats /stats/producer_stats.json
+
+  producer:
+    image: python:3.11-slim
+    depends_on:
+      kafka-init:
+        condition: service_completed_successfully
+    working_dir: /app
+    environment:
+      KAFKA_BOOTSTRAP: kafka:9092
+      PYTHONPATH: src
+    volumes:
+      - ./requirements.txt:/app/requirements.txt:ro
+      - ./src:/app/src:ro
+      - stats:/stats
+    command:
+      - sh
+      - -c
+      - >-
+        pip install -q -r requirements.txt &&
+        python -m wikipedia_streaming.producer --duration 300 --stats-out /stats/producer_stats.json
+
+volumes:
+  stats:

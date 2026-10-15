@@ -1,0 +1,109 @@
+{
+  "janela_segundos": 60,
+  "atraso_permitido_segundos": 120,
+  "tipos_agregados": [
+    "edit",
+    "new",
+    "log",
+    "categorize"
+  ],
+  "captura": {
+    "inicio_utc": "2026-10-14T22:55:53+00:00",
+    "fim_utc": "2026-10-14T23:00:52+00:00",
+    "duracao_segundos": 298.81,
+    "evento_mais_antigo_utc": "2026-10-14T22:55:52+00:00",
+    "evento_mais_recente_utc": "2026-10-14T23:00:52+00:00"
+  },
+  "contagens": {
+    "consumidos_do_topico": 7405,
+    "agregados": 7405,
+    "tardios_descartados": 0,
+    "ignorados_por_tipo": 0,
+    "invalidos": 0,
+    "janelas_fechadas_por_watermark": 3,
+    "janelas_encerradas_no_fim_do_run": 3
+  },
+  "latencia_segundos": {
+    "ponta_a_ponta_gravacao": {
+      "n": 2990,
+      "p50": 147.84,
+      "p95": 176.45,
+      "max": 180.12
+    },
+    "ponta_a_ponta_gravacao_fim_do_run": {
+      "n": 4415,
+      "p50": 100.84,
+      "p95": 172.23,
+      "max": 179.23
+    },
+    "ate_consumo": {
+      "n": 7405,
+      "p50": -0.08,
+      "p95": -0.02,
+      "max": 0.46
+    },
+    "desordem_observada": {
+      "n": 7405,
+      "p50": 0.0,
+      "p95": 0.02,
+      "max": 0.34
+    },
+    "histograma_gravacao": {
+      "faixas_s": [
+        "0-15",
+        "15-30",
+        "30-45",
+        "45-60",
+        "60-75",
+        "75-90",
+        "90-105",
+        "105-120",
+        "120-135",
+        "135-150",
+        "150-165",
+        "165-180",
+        "180-195",
+        "195-210",
+        "210-225",
+        "225-240",
+        "240-255",
+        "255-270",
+        "270-285",
+        "285-300",
+        ">=300"
+      ],
+      "eventos": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        865,
+        792,
+        625,
+        707,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "relogio_local_offset_segundos": 0.222752,
+  "producer": {
+    "received": 7405,
+    "published": 7405,
+    "delivery_failed": 0,
+    "duplicates": 0,
+    "invalid": 0,
+    "reconnects": 0
+  }
+}

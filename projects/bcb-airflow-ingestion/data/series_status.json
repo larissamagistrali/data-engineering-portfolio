@@ -1,0 +1,46 @@
+{
+  "gerado_em_utc": "2026-10-14T22:47:35+00:00",
+  "fonte": "API SGS do Banco Central (dados públicos)",
+  "series": [
+    {
+      "codigo": 432,
+      "serie": "selic_meta",
+      "primeira_data": "2010-01-01",
+      "ultima_data": "2026-10-14",
+      "linhas": 6131,
+      "linhas_novas_na_execucao": 0
+    },
+    {
+      "codigo": 1,
+      "serie": "dolar_venda",
+      "primeira_data": "2010-01-04",
+      "ultima_data": "2026-10-14",
+      "linhas": 4215,
+      "linhas_novas_na_execucao": 0
+    },
+    {
+      "codigo": 433,
+      "serie": "ipca_mensal",
+      "primeira_data": "2010-01-01",
+      "ultima_data": "2026-09-01",
+      "linhas": 201,
+      "linhas_novas_na_execucao": 0
+    },
+    {
+      "codigo": 4189,
+      "serie": "selic_over_mensal",
+      "primeira_data": "2010-01-01",
+      "ultima_data": "2026-10-01",
+      "linhas": 202,
+      "linhas_novas_na_execucao": 0
+    },
+    {
+      "codigo": 189,
+      "serie": "igpm_mensal",
+      "primeira_data": "2010-01-01",
+      "ultima_data": "2026-09-01",
+      "linhas": 201,
+      "linhas_novas_na_execucao": 0
+    }
+  ]
+}

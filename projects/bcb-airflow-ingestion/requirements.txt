@@ -1,0 +1,7 @@
+# Pipeline (Airflow). Instale com as constraints oficiais da versão (ver README):
+#   pip install -r requirements.txt -c https://raw.githubusercontent.com/apache/airflow/constraints-3.3.2/constraints-3.11.txt
+apache-airflow==3.3.2
+pandas>=2.2
+pyarrow>=15
+requests>=2.31
+pytest>=8

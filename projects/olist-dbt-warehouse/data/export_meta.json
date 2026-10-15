@@ -1,0 +1,17 @@
+{
+ "exported_at": "2026-10-14T20:22:05+00:00",
+ "rows": {
+  "kpi_overview": 1,
+  "kpi_monthly_revenue": 20,
+  "kpi_delivery_sla": 488,
+  "kpi_category_reviews": 65,
+  "kpi_top_sellers": 871,
+  "kpi_repurchase_cohort": 210,
+  "fct_orders": 20000,
+  "fct_order_items": 23215,
+  "dim_customers": 19069,
+  "dim_products": 7200,
+  "dim_sellers": 900,
+  "dim_date": 608
+ }
+}

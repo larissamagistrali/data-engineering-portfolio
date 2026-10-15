@@ -1,0 +1,181 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: Clientes por pedido, com CEP padronizado (5 dígitos) e UF em maiúsculas.
+    columns:
+      - name: customer_id
+        description: Chave do cliente por pedido.
+        data_tests: [unique, not_null]
+      - name: customer_unique_id
+        description: Identificador estável do cliente, usado para recompra.
+        data_tests: [not_null]
+      - name: zip_code_prefix
+        description: Prefixo do CEP (5 dígitos).
+      - name: city
+        description: Cidade (minúsculas, sem acento, como no dado original).
+      - name: state
+        description: UF do cliente.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [AC, AL, AM, AP, BA, CE, DF, ES, GO, MA, MG, MS, MT, PA, PB, PE, PI, PR, RJ, RN, RO, RR, RS, SC, SE, SP, TO]
+
+  - name: stg_orders
+    description: Pedidos com timestamps tipados e status normalizado.
+    columns:
+      - name: order_id
+        description: Chave do pedido.
+        data_tests: [unique, not_null]
+      - name: customer_id
+        description: Cliente do pedido.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
+      - name: order_status
+        description: Status do pedido.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [delivered, shipped, canceled, unavailable, invoiced, processing, approved, created]
+      - name: purchased_at
+        description: Momento da compra.
+        data_tests: [not_null]
+      - name: approved_at
+        description: Aprovação do pagamento.
+      - name: shipped_at
+        description: Postagem na transportadora.
+      - name: delivered_at
+        description: Entrega ao cliente.
+      - name: estimated_delivery_at
+        description: Data estimada de entrega (prometida ao cliente).
+
+  - name: stg_order_items
+    description: Itens dos pedidos com preço e frete em decimal(12,2).
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [order_id, order_item_id]
+    columns:
+      - name: order_id
+        description: Pedido do item.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_orders')
+                field: order_id
+      - name: order_item_id
+        description: Sequencial do item no pedido (1, 2, ...).
+        data_tests: [not_null]
+      - name: product_id
+        description: Produto vendido.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_products')
+                field: product_id
+      - name: seller_id
+        description: Vendedor do item.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_sellers')
+                field: seller_id
+      - name: price
+        description: Preço do item em R$.
+        data_tests: [not_null, non_negative]
+      - name: freight_value
+        description: Frete do item em R$.
+        data_tests: [not_null, non_negative]
+
+  - name: stg_order_payments
+    description: Pagamentos por pedido.
+    columns:
+      - name: order_id
+        description: Pedido pago.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_orders')
+                field: order_id
+      - name: payment_type
+        description: Forma de pagamento.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [credit_card, boleto, voucher, debit_card, not_defined]
+      - name: payment_installments
+        description: Número de parcelas.
+        data_tests:
+          - not_null
+          - non_negative
+      - name: payment_value
+        description: Valor pago em R$.
+        data_tests: [not_null, non_negative]
+
+  - name: stg_order_reviews
+    description: Avaliações dos pedidos (nota 1 a 5).
+    columns:
+      - name: review_id
+        description: Chave da avaliação.
+        data_tests: [unique, not_null]
+      - name: order_id
+        description: Pedido avaliado.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_orders')
+                field: order_id
+      - name: review_score
+        description: Nota de 1 a 5.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5]
+                quote: false
+
+  - name: stg_products
+    description: Produtos com nomes de coluna corrigidos e categoria ausente = sem_categoria.
+    columns:
+      - name: product_id
+        description: Chave do produto.
+        data_tests: [unique, not_null]
+      - name: category_name
+        description: Categoria em português.
+        data_tests: [not_null]
+      - name: weight_g
+        description: Peso em gramas.
+        data_tests: [non_negative]
+
+  - name: stg_sellers
+    description: Vendedores.
+    columns:
+      - name: seller_id
+        description: Chave do vendedor.
+        data_tests: [unique, not_null]
+      - name: state
+        description: UF do vendedor.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [AC, AL, AM, AP, BA, CE, DF, ES, GO, MA, MG, MS, MT, PA, PB, PE, PI, PR, RJ, RN, RO, RR, RS, SC, SE, SP, TO]
+
+  - name: stg_product_category_translation
+    description: Dicionário categoria PT para EN.
+    columns:
+      - name: category_name
+        description: Categoria em português.
+        data_tests: [unique, not_null]
+      - name: category_name_en
+        description: Categoria em inglês.
+        data_tests: [not_null]

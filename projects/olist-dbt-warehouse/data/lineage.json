@@ -1,0 +1,479 @@
+{
+ "nodes": [
+  {
+   "id": "source.olist_warehouse.olist.customers",
+   "name": "olist.customers",
+   "resource_type": "source",
+   "layer": "source",
+   "materialized": null,
+   "description": "Um registro por pedido (customer_id); o cliente real é customer_unique_id.",
+   "tests": 4
+  },
+  {
+   "id": "source.olist_warehouse.olist.order_items",
+   "name": "olist.order_items",
+   "resource_type": "source",
+   "layer": "source",
+   "materialized": null,
+   "description": "Itens do pedido (grão pedido + order_item_id).",
+   "tests": 1
+  },
+  {
+   "id": "source.olist_warehouse.olist.order_payments",
+   "name": "olist.order_payments",
+   "resource_type": "source",
+   "layer": "source",
+   "materialized": null,
+   "description": "Pagamentos por pedido (um pedido pode ter mais de uma forma de pagamento).",
+   "tests": 0
+  },
+  {
+   "id": "source.olist_warehouse.olist.order_reviews",
+   "name": "olist.order_reviews",
+   "resource_type": "source",
+   "layer": "source",
+   "materialized": null,
+   "description": "Avaliações dos clientes (nota 1 a 5). Um pedido pode ter mais de uma avaliação.",
+   "tests": 2
+  },
+  {
+   "id": "source.olist_warehouse.olist.orders",
+   "name": "olist.orders",
+   "resource_type": "source",
+   "layer": "source",
+   "materialized": null,
+   "description": "Pedidos com os marcos de data (compra, aprovação, transportadora, entrega, estimativa).",
+   "tests": 4
+  },
+  {
+   "id": "source.olist_warehouse.olist.product_category_name_translation",
+   "name": "olist.product_category_name_translation",
+   "resource_type": "source",
+   "layer": "source",
+   "materialized": null,
+   "description": "Tradução do nome da categoria (PT para EN).",
+   "tests": 2
+  },
+  {
+   "id": "source.olist_warehouse.olist.products",
+   "name": "olist.products",
+   "resource_type": "source",
+   "layer": "source",
+   "materialized": null,
+   "description": "Catálogo de produtos.",
+   "tests": 2
+  },
+  {
+   "id": "source.olist_warehouse.olist.sellers",
+   "name": "olist.sellers",
+   "resource_type": "source",
+   "layer": "source",
+   "materialized": null,
+   "description": "Vendedores do marketplace.",
+   "tests": 2
+  },
+  {
+   "id": "model.olist_warehouse.stg_customers",
+   "name": "stg_customers",
+   "resource_type": "model",
+   "layer": "staging",
+   "materialized": "view",
+   "description": "Clientes por pedido, com CEP padronizado (5 dígitos) e UF em maiúsculas.",
+   "tests": 6
+  },
+  {
+   "id": "model.olist_warehouse.stg_order_items",
+   "name": "stg_order_items",
+   "resource_type": "model",
+   "layer": "staging",
+   "materialized": "view",
+   "description": "Itens dos pedidos com preço e frete em decimal(12,2).",
+   "tests": 12
+  },
+  {
+   "id": "model.olist_warehouse.stg_order_payments",
+   "name": "stg_order_payments",
+   "resource_type": "model",
+   "layer": "staging",
+   "materialized": "view",
+   "description": "Pagamentos por pedido.",
+   "tests": 7
+  },
+  {
+   "id": "model.olist_warehouse.stg_order_reviews",
+   "name": "stg_order_reviews",
+   "resource_type": "model",
+   "layer": "staging",
+   "materialized": "view",
+   "description": "Avaliações dos pedidos (nota 1 a 5).",
+   "tests": 6
+  },
+  {
+   "id": "model.olist_warehouse.stg_orders",
+   "name": "stg_orders",
+   "resource_type": "model",
+   "layer": "staging",
+   "materialized": "view",
+   "description": "Pedidos com timestamps tipados e status normalizado.",
+   "tests": 10
+  },
+  {
+   "id": "model.olist_warehouse.stg_product_category_translation",
+   "name": "stg_product_category_translation",
+   "resource_type": "model",
+   "layer": "staging",
+   "materialized": "view",
+   "description": "Dicionário categoria PT para EN.",
+   "tests": 3
+  },
+  {
+   "id": "model.olist_warehouse.stg_products",
+   "name": "stg_products",
+   "resource_type": "model",
+   "layer": "staging",
+   "materialized": "view",
+   "description": "Produtos com nomes de coluna corrigidos e categoria ausente = sem_categoria.",
+   "tests": 5
+  },
+  {
+   "id": "model.olist_warehouse.stg_sellers",
+   "name": "stg_sellers",
+   "resource_type": "model",
+   "layer": "staging",
+   "materialized": "view",
+   "description": "Vendedores.",
+   "tests": 4
+  },
+  {
+   "id": "model.olist_warehouse.int_order_items_agg",
+   "name": "int_order_items_agg",
+   "resource_type": "model",
+   "layer": "intermediate",
+   "materialized": "view",
+   "description": "Itens agregados por pedido (quantidade, valor de itens, frete e total).",
+   "tests": 3
+  },
+  {
+   "id": "model.olist_warehouse.int_order_items_enriched",
+   "name": "int_order_items_enriched",
+   "resource_type": "model",
+   "layer": "intermediate",
+   "materialized": "view",
+   "description": "Itens com contexto de pedido, cliente, vendedor e categoria.",
+   "tests": 1
+  },
+  {
+   "id": "model.olist_warehouse.int_order_payments_agg",
+   "name": "int_order_payments_agg",
+   "resource_type": "model",
+   "layer": "intermediate",
+   "materialized": "view",
+   "description": "Pagamentos consolidados por pedido, com a forma de pagamento principal.",
+   "tests": 2
+  },
+  {
+   "id": "model.olist_warehouse.int_order_reviews_latest",
+   "name": "int_order_reviews_latest",
+   "resource_type": "model",
+   "layer": "intermediate",
+   "materialized": "view",
+   "description": "Avaliação mais recente por pedido (remove duplicidades de avaliação).",
+   "tests": 3
+  },
+  {
+   "id": "model.olist_warehouse.int_orders_delivery",
+   "name": "int_orders_delivery",
+   "resource_type": "model",
+   "layer": "intermediate",
+   "materialized": "view",
+   "description": "Métricas logísticas por pedido (prazo, atraso, status de entrega).",
+   "tests": 5
+  },
+  {
+   "id": "model.olist_warehouse.dim_customers",
+   "name": "dim_customers",
+   "resource_type": "model",
+   "layer": "marts",
+   "materialized": "table",
+   "description": "Clientes únicos (customer_unique_id) com localização mais recente, datas e valor de vida.",
+   "tests": 7
+  },
+  {
+   "id": "model.olist_warehouse.dim_date",
+   "name": "dim_date",
+   "resource_type": "model",
+   "layer": "marts",
+   "materialized": "table",
+   "description": "Calendário diário cobrindo o período de compras.",
+   "tests": 5
+  },
+  {
+   "id": "model.olist_warehouse.dim_products",
+   "name": "dim_products",
+   "resource_type": "model",
+   "layer": "marts",
+   "materialized": "table",
+   "description": "Produtos com categoria PT/EN e classe de peso.",
+   "tests": 6
+  },
+  {
+   "id": "model.olist_warehouse.dim_sellers",
+   "name": "dim_sellers",
+   "resource_type": "model",
+   "layer": "marts",
+   "materialized": "table",
+   "description": "Vendedores com região.",
+   "tests": 5
+  },
+  {
+   "id": "model.olist_warehouse.fct_order_items",
+   "name": "fct_order_items",
+   "resource_type": "model",
+   "layer": "marts",
+   "materialized": "table",
+   "description": "Fato de itens (grão: pedido + item).",
+   "tests": 8
+  },
+  {
+   "id": "model.olist_warehouse.fct_orders",
+   "name": "fct_orders",
+   "resource_type": "model",
+   "layer": "marts",
+   "materialized": "table",
+   "description": "Fato de pedidos (grão: 1 linha por pedido) com valor, pagamento, avaliação e métricas de entrega. is_valid_order exclui cancelados e indisponíveis.",
+   "tests": 17
+  },
+  {
+   "id": "model.olist_warehouse.kpi_category_reviews",
+   "name": "kpi_category_reviews",
+   "resource_type": "model",
+   "layer": "gold",
+   "materialized": "table",
+   "description": "Nota média e % de notas baixas (1 e 2) por categoria de produto.",
+   "tests": 4
+  },
+  {
+   "id": "model.olist_warehouse.kpi_delivery_sla",
+   "name": "kpi_delivery_sla",
+   "resource_type": "model",
+   "layer": "gold",
+   "materialized": "table",
+   "description": "SLA de entrega por mês e UF (contagens e somas reagregáveis).",
+   "tests": 4
+  },
+  {
+   "id": "model.olist_warehouse.kpi_monthly_revenue",
+   "name": "kpi_monthly_revenue",
+   "resource_type": "model",
+   "layer": "gold",
+   "materialized": "table",
+   "description": "Receita, pedidos, clientes e ticket médio por mês de compra (pedidos válidos).",
+   "tests": 5
+  },
+  {
+   "id": "model.olist_warehouse.kpi_overview",
+   "name": "kpi_overview",
+   "resource_type": "model",
+   "layer": "gold",
+   "materialized": "table",
+   "description": "Números-resumo do painel (1 linha).",
+   "tests": 1
+  },
+  {
+   "id": "model.olist_warehouse.kpi_repurchase_cohort",
+   "name": "kpi_repurchase_cohort",
+   "resource_type": "model",
+   "layer": "gold",
+   "materialized": "table",
+   "description": "Coorte de recompra por mês da primeira compra.",
+   "tests": 4
+  },
+  {
+   "id": "model.olist_warehouse.kpi_top_sellers",
+   "name": "kpi_top_sellers",
+   "resource_type": "model",
+   "layer": "gold",
+   "materialized": "table",
+   "description": "Ranking de vendedores por receita, com nota média e % de atraso.",
+   "tests": 4
+  }
+ ],
+ "edges": [
+  {
+   "source": "source.olist_warehouse.olist.products",
+   "target": "model.olist_warehouse.stg_products"
+  },
+  {
+   "source": "source.olist_warehouse.olist.sellers",
+   "target": "model.olist_warehouse.stg_sellers"
+  },
+  {
+   "source": "source.olist_warehouse.olist.order_payments",
+   "target": "model.olist_warehouse.stg_order_payments"
+  },
+  {
+   "source": "source.olist_warehouse.olist.customers",
+   "target": "model.olist_warehouse.stg_customers"
+  },
+  {
+   "source": "source.olist_warehouse.olist.orders",
+   "target": "model.olist_warehouse.stg_orders"
+  },
+  {
+   "source": "source.olist_warehouse.olist.order_items",
+   "target": "model.olist_warehouse.stg_order_items"
+  },
+  {
+   "source": "source.olist_warehouse.olist.order_reviews",
+   "target": "model.olist_warehouse.stg_order_reviews"
+  },
+  {
+   "source": "source.olist_warehouse.olist.product_category_name_translation",
+   "target": "model.olist_warehouse.stg_product_category_translation"
+  },
+  {
+   "source": "model.olist_warehouse.stg_sellers",
+   "target": "model.olist_warehouse.dim_sellers"
+  },
+  {
+   "source": "model.olist_warehouse.int_order_items_agg",
+   "target": "model.olist_warehouse.dim_customers"
+  },
+  {
+   "source": "model.olist_warehouse.stg_customers",
+   "target": "model.olist_warehouse.dim_customers"
+  },
+  {
+   "source": "model.olist_warehouse.stg_orders",
+   "target": "model.olist_warehouse.dim_customers"
+  },
+  {
+   "source": "model.olist_warehouse.stg_product_category_translation",
+   "target": "model.olist_warehouse.dim_products"
+  },
+  {
+   "source": "model.olist_warehouse.stg_products",
+   "target": "model.olist_warehouse.dim_products"
+  },
+  {
+   "source": "model.olist_warehouse.int_order_items_enriched",
+   "target": "model.olist_warehouse.fct_order_items"
+  },
+  {
+   "source": "model.olist_warehouse.int_order_items_agg",
+   "target": "model.olist_warehouse.fct_orders"
+  },
+  {
+   "source": "model.olist_warehouse.int_order_payments_agg",
+   "target": "model.olist_warehouse.fct_orders"
+  },
+  {
+   "source": "model.olist_warehouse.int_order_reviews_latest",
+   "target": "model.olist_warehouse.fct_orders"
+  },
+  {
+   "source": "model.olist_warehouse.int_orders_delivery",
+   "target": "model.olist_warehouse.fct_orders"
+  },
+  {
+   "source": "model.olist_warehouse.stg_customers",
+   "target": "model.olist_warehouse.fct_orders"
+  },
+  {
+   "source": "model.olist_warehouse.stg_orders",
+   "target": "model.olist_warehouse.fct_orders"
+  },
+  {
+   "source": "model.olist_warehouse.stg_orders",
+   "target": "model.olist_warehouse.dim_date"
+  },
+  {
+   "source": "model.olist_warehouse.fct_orders",
+   "target": "model.olist_warehouse.kpi_delivery_sla"
+  },
+  {
+   "source": "model.olist_warehouse.fct_orders",
+   "target": "model.olist_warehouse.kpi_repurchase_cohort"
+  },
+  {
+   "source": "model.olist_warehouse.fct_orders",
+   "target": "model.olist_warehouse.kpi_monthly_revenue"
+  },
+  {
+   "source": "model.olist_warehouse.dim_sellers",
+   "target": "model.olist_warehouse.kpi_top_sellers"
+  },
+  {
+   "source": "model.olist_warehouse.fct_order_items",
+   "target": "model.olist_warehouse.kpi_top_sellers"
+  },
+  {
+   "source": "model.olist_warehouse.fct_orders",
+   "target": "model.olist_warehouse.kpi_top_sellers"
+  },
+  {
+   "source": "model.olist_warehouse.dim_customers",
+   "target": "model.olist_warehouse.kpi_overview"
+  },
+  {
+   "source": "model.olist_warehouse.dim_products",
+   "target": "model.olist_warehouse.kpi_overview"
+  },
+  {
+   "source": "model.olist_warehouse.dim_sellers",
+   "target": "model.olist_warehouse.kpi_overview"
+  },
+  {
+   "source": "model.olist_warehouse.fct_orders",
+   "target": "model.olist_warehouse.kpi_overview"
+  },
+  {
+   "source": "model.olist_warehouse.fct_order_items",
+   "target": "model.olist_warehouse.kpi_category_reviews"
+  },
+  {
+   "source": "model.olist_warehouse.fct_orders",
+   "target": "model.olist_warehouse.kpi_category_reviews"
+  },
+  {
+   "source": "model.olist_warehouse.stg_orders",
+   "target": "model.olist_warehouse.int_orders_delivery"
+  },
+  {
+   "source": "model.olist_warehouse.stg_order_reviews",
+   "target": "model.olist_warehouse.int_order_reviews_latest"
+  },
+  {
+   "source": "model.olist_warehouse.stg_customers",
+   "target": "model.olist_warehouse.int_order_items_enriched"
+  },
+  {
+   "source": "model.olist_warehouse.stg_order_items",
+   "target": "model.olist_warehouse.int_order_items_enriched"
+  },
+  {
+   "source": "model.olist_warehouse.stg_orders",
+   "target": "model.olist_warehouse.int_order_items_enriched"
+  },
+  {
+   "source": "model.olist_warehouse.stg_product_category_translation",
+   "target": "model.olist_warehouse.int_order_items_enriched"
+  },
+  {
+   "source": "model.olist_warehouse.stg_products",
+   "target": "model.olist_warehouse.int_order_items_enriched"
+  },
+  {
+   "source": "model.olist_warehouse.stg_sellers",
+   "target": "model.olist_warehouse.int_order_items_enriched"
+  },
+  {
+   "source": "model.olist_warehouse.stg_order_items",
+   "target": "model.olist_warehouse.int_order_items_agg"
+  },
+  {
+   "source": "model.olist_warehouse.stg_order_payments",
+   "target": "model.olist_warehouse.int_order_payments_agg"
+  }
+ ]
+}

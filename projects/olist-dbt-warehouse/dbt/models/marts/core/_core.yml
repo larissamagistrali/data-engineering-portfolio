@@ -1,0 +1,184 @@
+version: 2
+
+models:
+  - name: dim_date
+    description: Calendário diário cobrindo o período de compras.
+    columns:
+      - name: date_day
+        description: Dia (chave).
+        data_tests: [unique, not_null]
+      - name: year_month
+        description: Ano-mês no formato AAAA-MM.
+      - name: month_start
+        description: Primeiro dia do mês.
+      - name: day_name_pt
+        description: Nome do dia da semana em português.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [segunda, terça, quarta, quinta, sexta, sábado, domingo]
+      - name: is_weekend
+        description: Verdadeiro para sábado e domingo.
+
+  - name: dim_customers
+    description: Clientes únicos (customer_unique_id) com localização mais recente, datas e valor de vida.
+    columns:
+      - name: customer_unique_id
+        description: Chave do cliente.
+        data_tests: [unique, not_null]
+      - name: state
+        description: UF mais recente do cliente.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [AC, AL, AM, AP, BA, CE, DF, ES, GO, MA, MG, MS, MT, PA, PB, PE, PI, PR, RJ, RN, RO, RR, RS, SC, SE, SP, TO]
+      - name: first_order_at
+        description: Momento da primeira compra.
+      - name: orders_count
+        description: Quantidade de pedidos do cliente.
+        data_tests: [non_negative]
+      - name: lifetime_value
+        description: Soma de itens + frete dos pedidos válidos, em R$.
+        data_tests: [non_negative]
+      - name: is_repeat_customer
+        description: Verdadeiro se fez mais de um pedido.
+
+  - name: dim_products
+    description: Produtos com categoria PT/EN e classe de peso.
+    columns:
+      - name: product_id
+        description: Chave do produto.
+        data_tests: [unique, not_null]
+      - name: category_en
+        description: Categoria em inglês (ou o nome PT quando não há tradução).
+        data_tests: [not_null]
+      - name: weight_class
+        description: leve (<500 g), medio (<5 kg), pesado ou desconhecido.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [leve, medio, pesado, desconhecido]
+      - name: volume_cm3
+        description: Volume da embalagem em cm3.
+        data_tests: [non_negative]
+
+  - name: dim_sellers
+    description: Vendedores com região.
+    columns:
+      - name: seller_id
+        description: Chave do vendedor.
+        data_tests: [unique, not_null]
+      - name: region
+        description: Região do Brasil da UF do vendedor.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [Sudeste, Sul, Centro-Oeste, Nordeste, Norte]
+
+  - name: fct_orders
+    description: >
+      Fato de pedidos (grão: 1 linha por pedido) com valor, pagamento, avaliação e métricas de entrega.
+      is_valid_order exclui cancelados e indisponíveis.
+    columns:
+      - name: order_id
+        description: Chave do pedido.
+        data_tests: [unique, not_null]
+      - name: customer_unique_id
+        description: Cliente (dim_customers).
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_unique_id
+      - name: purchase_date
+        description: Dia da compra (dim_date).
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_day
+      - name: order_status
+        description: Status do pedido.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [delivered, shipped, canceled, unavailable, invoiced, processing, approved, created]
+      - name: items_count
+        description: Número de itens do pedido (0 quando o pedido não tem itens).
+        data_tests: [non_negative]
+      - name: order_value
+        description: Itens + frete em R$.
+        data_tests: [non_negative]
+      - name: payment_value
+        description: Total pago em R$ (soma das formas de pagamento).
+        data_tests: [non_negative]
+      - name: max_installments
+        description: Maior número de parcelas entre os pagamentos.
+      - name: main_payment_type
+        description: Forma de pagamento principal.
+      - name: review_score
+        description: Nota da avaliação mais recente (1 a 5).
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5]
+                quote: false
+      - name: delivery_days
+        description: Dias da compra até a entrega.
+        data_tests: [non_negative]
+      - name: delay_days
+        description: Dias de diferença entre a entrega e a estimativa (positivo = atraso).
+      - name: is_late
+        description: Entregue depois da data estimada.
+      - name: delivery_status
+        description: no_prazo, atrasado ou nao_entregue.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [no_prazo, atrasado, nao_entregue]
+
+  - name: fct_order_items
+    description: "Fato de itens (grão: pedido + item)."
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [order_id, order_item_id]
+    columns:
+      - name: order_id
+        description: Pedido.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fct_orders')
+                field: order_id
+      - name: product_id
+        description: Produto (dim_products).
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_products')
+                field: product_id
+      - name: seller_id
+        description: Vendedor (dim_sellers).
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_sellers')
+                field: seller_id
+      - name: purchase_date
+        description: Dia da compra (dim_date).
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_day
+      - name: price
+        description: Preço do item em R$.
+        data_tests: [non_negative]
+      - name: item_total
+        description: Preço + frete em R$.
+        data_tests: [non_negative]

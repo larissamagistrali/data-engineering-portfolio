@@ -1,0 +1,5 @@
+# Dependências do pipeline (produtor e agregador). O app usa só o requirements.txt da raiz.
+requests>=2.32
+confluent-kafka>=2.6
+pandas>=2.2
+pyarrow>=15
